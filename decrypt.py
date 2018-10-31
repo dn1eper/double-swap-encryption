@@ -20,7 +20,7 @@ def decrypt(text, key):
     res = ""
     for i in key1:
         for j in key2:
-            if table[i][j] != "-":        
+            if table[i][j] != "-":
                 res += table[i][j]
 
     return res
