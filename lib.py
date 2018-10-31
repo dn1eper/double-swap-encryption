@@ -2,7 +2,6 @@ _MAX_TEXT_LENGTH = 50
 _MAX_KEY_LENGTH = 10
 _MIN_KEY_LENGTH = 3
 
-
 def convert_text(text):
     """
     Убирает пробелы, знаки припенания и приводит текст к нижнему регистру.
@@ -43,10 +42,42 @@ def create_key(key, length):
     else:
         return key[:length]
 
-def str_to_seq(string):
+def str_to_sort_seq(string):
     """
-    Преобзаует сроку в сортирующую последовательность по буквам
+    Преобзаует сроку в отсортированную по буквам последовательность цифр,
+    соответствующих позициям этих букв в исходной строке.
+    Пример: "бва" -> [2,0,1]
     """
     dct = {i: string[i] for i in range(len(string))}
     dct = sorted(dct.items(), key = lambda x: x[1])
     return [dct[i][0] for i in range(len(dct))]
+
+def str_to_seq(string):
+    """
+    Преобзаует сроку в последовательность цифр,
+    соответствующих буквенному порядку.
+    Пример: "бва" -> [1,2,0]
+    """
+    arr = [0 for i in range(len(string))]
+    j = 0
+    for i in str_to_sort_seq(string):
+        arr[i] = j
+        j += 1
+    return arr
+
+def str_to_table(string, n, m):
+    """
+    Помещает строку в таблицу размера n на m
+    """
+    table = [["-"] * m for i in range(n)]
+    # Помещаем текст в таблицу
+    i = 0
+    j = 0
+    for char in string:
+        table[i][j] = char
+        j += 1
+        if j == m:
+            j = 0
+            i += 1
+
+    return table
