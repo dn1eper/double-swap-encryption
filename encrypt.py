@@ -8,20 +8,20 @@ def encrypt(text, key):
     """
     # Преобразуем входные данные к нужному формату
     text = convert_text(text)
-    key1 = convert_key(key)
+    key = convert_key(key)
     # Вычисляем размеры таблицы
-    m = ceil(len(text) / len(key1))
+    m = ceil(len(text) / len(key))
     # Создаем таблицу (матрицу) нужного размера
-    table = str_to_table(text, len(key1), m)
+    table = str_to_table(text, len(key), m)
     # Генерируем второй ключ из первого нужной длинны
-    key2 = str_to_sort_seq(create_key(key1, m))
-    key1 = str_to_sort_seq(key1)
-    # Получаем преобразованную строку сгенерированную по ключам
+    key2 = str_to_sort_seq(create_key(key, m))
+    key1 = str_to_sort_seq(key)
+    
+    # Шифруем, обходя строки и столбцы таблицы по порядку, который задается ключами
     res = ""
     for i in key1:
         for j in key2:
-            if table[i][j] != "-":
-                res += table[i][j]
+            res += table[i][j]
 
     return res
 

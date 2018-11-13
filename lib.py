@@ -1,20 +1,23 @@
-_MAX_TEXT_LENGTH = 50
+_MIN_TEXT_LENGTH = 50
 _MAX_KEY_LENGTH = 10
 _MIN_KEY_LENGTH = 3
 
 def convert_text(text):
     """
-    Убирает пробелы, знаки припенания и приводит текст к нижнему регистру.
-    Возвращает обрезанный текст, если он слишком длинный.
+    Убирает знаки припенания, приводит текст к нижнему регистру, и заменяет пробелы "-"
     """
+    if len(text) < _MIN_TEXT_LENGTH:
+        raise Exception("Текст слишком короткий, минимальная длина текста " + str(_MIN_TEXT_LENGTH))
+
     res = []
     for char in text.lower():
+        if char == " " or char == "\n" or char == "-":
+            res.append("-")
+            continue
         for i in range(1072, 1104):
             if char == chr(i):
                 res.append(char)
                 break
-        if len(res) == _MAX_TEXT_LENGTH:
-            break
     
     return res
 
@@ -44,9 +47,9 @@ def create_key(key, length):
 
 def str_to_sort_seq(string):
     """
-    Преобзаует сроку в отсортированную по буквам последовательность цифр,
+    Преобразует сроку в отсортированную по буквам последовательность цифр,
     соответствующих позициям этих букв в исходной строке.
-    Пример: "бва" -> [2,0,1]
+    Пример: "бва" -> "абв" -> [2,0,1]
     """
     dct = {i: string[i] for i in range(len(string))}
     dct = sorted(dct.items(), key = lambda x: x[1])
@@ -54,7 +57,7 @@ def str_to_sort_seq(string):
 
 def str_to_seq(string):
     """
-    Преобзаует сроку в последовательность цифр,
+    Преобразует сроку в последовательность цифр,
     соответствующих буквенному порядку.
     Пример: "бва" -> [1,2,0]
     """
