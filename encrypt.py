@@ -2,6 +2,8 @@ from sys import argv
 from math import ceil
 from lib import *
 
+_RES_FILE_NAME = "encrypted.txt"
+
 def encrypt(text, key):
     """
     Шифрует текст с помощью полученного ключа методом двойной перестановки
@@ -34,7 +36,8 @@ if __name__ == '__main__':
         # Шифрование
         encrypted = encrypt(text, key)
         # Запись результата в файл
-        with open("encrypted.txt", "w", encoding='utf-8') as file:
+        with open(_RES_FILE_NAME, "w", encoding='utf-8') as file:
             file.write(encrypted)
+            print("Зашифрованый текст помещен в файл " + _RES_FILE_NAME)
     else:
         print("Неверный ситаксис.\nИспользуйте - encrypt.py <key> <filename>")

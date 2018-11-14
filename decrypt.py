@@ -2,6 +2,8 @@ from sys import argv
 from math import ceil
 from lib import *
 
+_RES_FILE_NAME = "decrypted.txt"
+
 def decrypt(text, key):
     """
     Дешифрует текст с помощью полученного ключа методом двойной перестановки
@@ -37,7 +39,8 @@ if __name__ == '__main__':
         # Дешифрование
         decrypted = decrypt(text, key)
         # Запись результата в файл
-        with open("decrypted.txt", "w", encoding='utf-8') as file:
+        with open(_RES_FILE_NAME, "w", encoding='utf-8') as file:
             file.write(decrypted)
+            print("Расшифрованый текст помещен в файл " + _RES_FILE_NAME)
     else:
         print("Неверный ситаксис.\nИспользуйте - decrypt.py <key> <filename>")
