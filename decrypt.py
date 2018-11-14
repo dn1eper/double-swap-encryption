@@ -2,7 +2,7 @@ from sys import argv
 from math import ceil
 from lib import *
 
-_RES_FILE_NAME = "decrypted.txt"
+_RES_FILE_NAME = "res/dec.txt"
 
 def decrypt(text, key):
     """

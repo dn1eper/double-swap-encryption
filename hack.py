@@ -1,10 +1,12 @@
 from sys import argv
 from math import ceil
 from itertools import permutations
-from lib import _MIN_KEY_LENGTH, _MAX_KEY_LENGTH, str_to_table, create_key, str_to_seq
-from display import display
+from lib import _MIN_KEY_LENGTH, _MAX_KEY_LENGTH, \
+    str_to_table, create_key, str_to_seq, display_progress
+from time import time
 
-_RES_FILE_NAME = "hacked.txt"
+_RES_FILE_NAME = "res/hacked.txt"
+_DICT_FILE_NAME = "dict/ru.txt"
 
 def hack(text, vocabulary):
     """
@@ -20,6 +22,7 @@ def hack(text, vocabulary):
         key1_set = [i for i in range(n)]
         # Перебираем все возможные перестановки 
         for key1 in permutations(key1_set):
+            # Вычисляем второй ключ, на основе первого
             key2 = str_to_seq(create_key(key1, m))
             # Получаем дешифровку
             res = ""
@@ -32,27 +35,32 @@ def hack(text, vocabulary):
             # Если она верна, возврашаем результат
             if is_decrypted(res, vocabulary):
                 return res
-            else: display()
+            else: 
+                display_progress()
 
 def is_decrypted(text, vocabulary):
     """
     Определяет, является ли полученная строка расшифровкой
     """
-    num = 2
-    count = 0
+    num = 4
+    find = 0
+    flag = False
     # Перебираем первые num слов в тексе
     for word in text.split(" ", num):
         if len(word) < 26:
             # Перебираем все слова в словаре
-            for voc in vocabulary.split('\n'):
+            for voc in vocabulary:
                 if word == voc:
-                    count += 1
+                    flag = True
                     break
-    
-    if count == num:
-        return True
-    else: 
-        return False
+            # Если нашли совпадение
+            if flag:
+                find += 1
+                flag = False
+                if find == num:
+                    return True
+            else:
+                return False
 
 if __name__ == '__main__':
     if len(argv) == 2:
@@ -60,13 +68,15 @@ if __name__ == '__main__':
         with open(argv[1], 'r', encoding='utf-8') as file:
             text = file.read()
         # Читаем словарь
-        with open('dict.binary', 'r', encoding='utf-8') as file:
-            vocabulary = file.read()
+        with open(_DICT_FILE_NAME, 'r', encoding='utf-8') as file:
+            vocabulary = file.read().split('\n')
+        start_time = time()
         # Взлом перебором
         hacked = hack(text, vocabulary)
         # Запись результата в файл
         with open(_RES_FILE_NAME, "w", encoding='utf-8') as file:
             file.write(hacked)
-            print("Подобранный текст помещен в файл " + _RES_FILE_NAME)
+            print("\nПодобранный текст помещен в файл " + _RES_FILE_NAME)
+            print("--- %s seconds ---" % round((time() - start_time), 2))
     else:
         print("Неверный ситаксис.\nИспользуйте - hack.py <filename>")

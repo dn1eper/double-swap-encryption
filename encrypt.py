@@ -2,7 +2,7 @@ from sys import argv
 from math import ceil
 from lib import *
 
-_RES_FILE_NAME = "encrypted.txt"
+_RES_FILE_NAME = "res/enc.txt"
 
 def encrypt(text, key):
     """

@@ -1,6 +1,3 @@
 __pycache__/
-
-encrypted.txt
-decrypted.txt
-test.txt
-hacked.txt
+.vscode
+res/*
