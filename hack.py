@@ -4,11 +4,12 @@ from itertools import permutations
 from lib import _MIN_KEY_LENGTH, _MAX_KEY_LENGTH, \
     str_to_table, create_key, str_to_seq, display_progress
 from time import time
+from tree import Tree
 
 _RES_FILE_NAME = "res/hacked.txt"
 _DICT_FILE_NAME = "dict/ru.txt"
 
-def hack(text, vocabulary):
+def hack(text, tree):
     """
     Подбирает ключ шифрования к зашифрованому сообщению
     """
@@ -33,30 +34,23 @@ def hack(text, vocabulary):
                     else:
                         res += table[i][j]
             # Если она верна, возврашаем результат
-            if is_decrypted(res, vocabulary):
+            if is_decrypted(res, tree):
                 return res
             else: 
                 display_progress()
 
-def is_decrypted(text, vocabulary):
+def is_decrypted(text, tree):
     """
     Определяет, является ли полученная строка расшифровкой
     """
-    num = 4
+    num = 3
     find = 0
-    flag = False
     # Перебираем первые num слов в тексе
     for word in text.split(" ", num):
-        if len(word) < 26:
-            # Перебираем все слова в словаре
-            for voc in vocabulary:
-                if word == voc:
-                    flag = True
-                    break
+        if len(word) > 1 and len(word) < 26:
             # Если нашли совпадение
-            if flag:
+            if tree.contains(word):
                 find += 1
-                flag = False
                 if find == num:
                     return True
             else:
@@ -71,12 +65,18 @@ if __name__ == '__main__':
         with open(_DICT_FILE_NAME, 'r', encoding='utf-8') as file:
             vocabulary = file.read().split('\n')
         start_time = time()
+        # Строим дерево
+        tree = Tree(vocabulary)
+        del vocabulary
         # Взлом перебором
-        hacked = hack(text, vocabulary)
+        hacked = hack(text, tree)
         # Запись результата в файл
-        with open(_RES_FILE_NAME, "w", encoding='utf-8') as file:
-            file.write(hacked)
-            print("\nПодобранный текст помещен в файл " + _RES_FILE_NAME)
-            print("--- %s seconds ---" % round((time() - start_time), 2))
+        if (hacked):
+            with open(_RES_FILE_NAME, "w", encoding='utf-8') as file:
+                file.write(hacked)
+                print("\nПодобранный текст помещен в файл " + _RES_FILE_NAME)
+        else:
+            print("\nТекст не был распознан" + _RES_FILE_NAME)
+        print("--- %s seconds ---" % round((time() - start_time), 2))
     else:
         print("Неверный ситаксис.\nИспользуйте - hack.py <filename>")
